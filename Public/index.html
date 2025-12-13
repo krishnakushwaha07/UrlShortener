@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Url Shortener</title>
+  </head>
+  <body>
+    <div class="container">
+      <form action="" id="shorten-form">
+        <div>
+          <label for="url">Enter url:</label>
+          <input
+            type="url"
+            id="url"
+            placeholder="Enter url here..."
+            required
+            name="url"
+          />
+
+          <label for="shortcode">Enter shortcode:</label>
+          <input
+            type="text"
+            id="shortcode"
+            placeholder="Enter short code here..."
+            name="shortcode"
+            required
+          />
+        </div>
+        <button type="submit" id="btn">Shorten</button>
+      </form>
+
+      <p>Shorted Urls</p>
+      <ul id="shorted-links"></ul>
+    </div>
+  </body>
+  <script>
+    document
+      .getElementById("shorten-form")
+      .addEventListener("submit", async (event) => {
+        event.preventDefault();
+        // getting form data...
+        const formdata = new FormData(event.target);
+        const url = formdata.get("url");
+        const shortcode = formdata.get("shortcode");
+
+        // sending post request...
+        const data = { url, shortcode };
+
+        const res = await fetch("/shorten", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        // display message got by response...
+        const message = await res.text();
+        if (res.ok) {
+          alert(message);
+        } else {
+          alert(message);
+        }
+
+        // clear the form after submission...
+        location.reload();
+        event.target.reset();
+      });
+
+    // get data from frontend and display to the user...
+    const loadData = async (e) => {
+      const ul = document.getElementById("shorted-links");
+
+      // get data from server...
+      const res = await fetch("/getlinks");
+      const data = await res.json();
+      //console.log(data);
+
+      // displaying the data to the frontend...
+      const frag = document.createDocumentFragment();
+      for (let key in data) {
+        const li = document.createElement("li");
+
+        const btn = document.createElement("button");
+        btn.innerText = "Delete";
+        btn.id = key;
+        btn.className = "delete";
+
+        const url = data[key];
+        const finalUrl = url.length >= 25 ? `${url.slice(0, 20)}...` : url;
+
+        li.innerHTML = `<a href="/${key}" target="_blank" title="${url}">${window.location.origin}/${key}</a>`;
+
+        li.appendChild(btn);
+        frag.appendChild(li);
+      }
+      ul.append(frag);
+
+      
+      // deleting the links...
+      document
+        .querySelector("#shorted-links")
+        .addEventListener("click", async (e) => {
+          e.stopPropagation()
+          if (e.target.className === "delete") {
+            const id = e.target.id;
+            const res = await fetch("/deletelink", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ id }),
+            });
+
+            const message = await res.text();
+            if (res.ok) {
+              alert(message);
+            } else {
+              alert(message);
+            }
+            // console.log(e.target.parentElement);
+            e.target.parentElement.remove();
+          }
+        });
+    };
+
+    window.addEventListener("DOMContentLoaded", () => {
+      loadData();
+    });
+  </script>
+</html>

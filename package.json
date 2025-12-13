@@ -1,0 +1,12 @@
+{
+  "name": "urlshortener",
+  "version": "1.0.0",
+  "description": "This can be used to short the URLs",
+  "main": "server.js",
+  "scripts": {
+    "dev" : "node --watch server.js",
+    "start": "node server.js"
+  },
+  "author": "krishna kushwaha",
+  "license": "ISC"
+}
