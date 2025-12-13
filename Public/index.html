@@ -7,6 +7,7 @@
     <title>Url Shortener</title>
   </head>
   <body>
+    <p id="message"></p>
     <div class="container">
       <form action="" id="shorten-form">
         <div>
@@ -36,6 +37,7 @@
     </div>
   </body>
   <script>
+    const alertUser = document.querySelector("#message");
     document
       .getElementById("shorten-form")
       .addEventListener("submit", async (event) => {
@@ -58,14 +60,28 @@
 
         // display message got by response...
         const message = await res.text();
+        alertUser.innerText = message;
+        setInterval(() => {
+          alertUser.innerText = "";
+        }, 3000);
+
         if (res.ok) {
-          alert(message);
-        } else {
-          alert(message);
+          const li = document.createElement("li");
+
+          const btn = document.createElement("button");
+          btn.innerText = "Delete";
+          btn.id = shortcode;
+          btn.className = "delete";
+
+          li.innerHTML = `<a href="/${shortcode}" target="_blank" title="${url}">${window.location.origin}/${shortcode}</a>`;
+
+          li.appendChild(btn);
+
+          const ul = document.getElementById("shorted-links");
+          ul.prepend(li);
         }
 
         // clear the form after submission...
-        location.reload();
         event.target.reset();
       });
 
@@ -89,7 +105,6 @@
         btn.className = "delete";
 
         const url = data[key];
-        const finalUrl = url.length >= 25 ? `${url.slice(0, 20)}...` : url;
 
         li.innerHTML = `<a href="/${key}" target="_blank" title="${url}">${window.location.origin}/${key}</a>`;
 
@@ -98,12 +113,11 @@
       }
       ul.append(frag);
 
-      
       // deleting the links...
       document
         .querySelector("#shorted-links")
         .addEventListener("click", async (e) => {
-          e.stopPropagation()
+          e.stopPropagation();
           if (e.target.className === "delete") {
             const id = e.target.id;
             const res = await fetch("/deletelink", {
@@ -115,11 +129,10 @@
             });
 
             const message = await res.text();
-            if (res.ok) {
-              alert(message);
-            } else {
-              alert(message);
-            }
+            alertUser.innerText = message;
+            setInterval(() => {
+              alertUser.innerText = "";
+            }, 2000);
             // console.log(e.target.parentElement);
             e.target.parentElement.remove();
           }
