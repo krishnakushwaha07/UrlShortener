@@ -1,5 +1,4 @@
 import express from "express";
-import { fileURLToPath } from "url";
 import path from "path"
 import { shortenerRoutes } from "./routes/shortener.routes.js";
 import { fileURLToPath } from "url";
