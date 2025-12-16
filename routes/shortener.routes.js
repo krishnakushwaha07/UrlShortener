@@ -5,8 +5,7 @@ export const shortenerRoutes = express.Router();
 
 shortenerRoutes.use(express.urlencoded());
 shortenerRoutes.use(express.json());
-// serving html and css file through express.static() middleware.
-shortenerRoutes.use(express.static(path.resolve("public")));
+
 
 const dataPath = path.join("Data", "links.json");
 
@@ -81,8 +80,6 @@ shortenerRoutes.get("/:shortcode", async (req, res) => {
     return res.redirect(links[shortcode]);
   } else {
     const filePath = path.resolve("views", "404.html");
-    console.log(filePath);
-
     return res.sendFile(filePath);
   }
 });

@@ -1,7 +1,10 @@
 import express from "express";
+import path from "path"
 import { shortenerRoutes } from "./routes/shortener.routes.js";
 
 const app = express();
+// serving html and css file through express.static() middleware.
+app.use(express.static(path.resolve("public")));
 app.use(shortenerRoutes);
 
 // this line tells the application that we are using EJS.
