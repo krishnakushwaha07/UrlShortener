@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Url Shortener</title>
+  </head>
+  <body>
+    <p id="message"></p>
+    <div class="container">
+      <form action="/senddata" method="post" id="shorten-form">
+        <div>
+          <label for="url">Enter url:</label>
+          <input
+            type="url"
+            id="url"
+            placeholder="Enter url here..."
+            required
+            name="url"
+          />
+
+          <label for="shortcode">Enter shortcode:</label>
+          <input
+            type="text"
+            id="shortcode"
+            placeholder="Enter short code here..."
+            name="shortcode"
+            required
+          />
+        </div>
+        <button type="submit" id="btn">Shorten</button>
+      </form>
+
+      <p>Shorted Urls</p>
+      <ul id="shorted-links">
+        <%  for(const key in links){ %>
+          <li>
+            <a href="/<%=key%>" target="_blank" title="<%=links[key]%>"><%=host%>/<%=key%></a>
+            <button class="delete" id="<%=key%>">Delete</button>
+          </li>
+        
+        <% } %>
+      </ul>
+    </div>
+  </body>
+  <script>
+    // deleting the links...
+    document
+      .querySelector("#shorted-links")
+      .addEventListener("click", async (e) => {
+       
+        if (e.target.className === "delete") {
+          const id = e.target.id;
+          const res = await fetch("/deletelink", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id }),
+          });
+
+          e.target.parentElement.remove();
+        }
+      });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      loadData();
+    });
+  </script>
+</html>
