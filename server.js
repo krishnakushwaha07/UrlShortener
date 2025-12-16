@@ -2,11 +2,11 @@ import express from "express";
 import { shortenerRoutes } from "./routes/shortener.routes.js";
 
 const app = express();
-app.set("view engine","ejs")
 
 // serving html and css file through express.static() middleware.
 app.use(express.static("public"));
 
+app.set("view engine","ejs")
 
 app.use("/",shortenerRoutes);
 
