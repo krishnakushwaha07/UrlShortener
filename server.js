@@ -4,7 +4,7 @@ import { shortenerRoutes } from "./routes/shortener.routes.js";
 const app = express();
 
 // serving html and css file through express.static() middleware.
-app.use(express.static("public"));
+app.use(express.static("Public"));
 
 app.set("view engine","ejs")
 

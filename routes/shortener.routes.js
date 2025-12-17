@@ -71,7 +71,7 @@ shortenerRoutes.post("/deletelink", async (req, res) => {
 
 
 // code to redirect to actual link...
-shortenerRoutes.get("/shorted/:shortcode", async (req, res) => {
+shortenerRoutes.get("/:shortcode", async (req, res) => {
   const { shortcode } = req.params;
   console.log(shortcode);
   const links = await loadLinks();
